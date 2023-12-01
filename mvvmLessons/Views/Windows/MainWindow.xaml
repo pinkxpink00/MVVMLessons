@@ -21,10 +21,31 @@
         <StatusBar DockPanel.Dock="Bottom"></StatusBar>
         <TabControl>
             <TabItem Header="Tab1">
-                <Grid></Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="63"/>
+                        <RowDefinition Height="325"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="157"/>
+                        <ColumnDefinition Width="637"/>
+                    </Grid.ColumnDefinitions>
+                    <Rectangle Grid.Column="0" Grid.Row="0"
+                         Margin="5,7"
+                         Fill="DarkOrchid"
+                         Stroke ="Goldenrod"
+                         StrokeThickness="3"
+                         RadiusX="5"
+                         RadiusY="7"/>
+                    <Ellipse Grid.Column="1" Grid.Row="0"
+                             Fill ="Bisque"
+                             Stroke="Green"
+                             StrokeThickness="3"/>
+                </Grid>
             </TabItem>
             <TabItem Header="Tab2">
-                <Grid></Grid>
+                <Grid>
+                </Grid>
             </TabItem>
         </TabControl>
     </DockPanel>
