@@ -18,17 +18,24 @@
                 <MenuItem Header="About us"></MenuItem>
             </MenuItem>
         </Menu>
-        <StatusBar DockPanel.Dock="Bottom"></StatusBar>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem MinWidth="150" MaxWidth="350"> 
+                <TextBlock Text="234"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <ProgressBar Width="120" Height="14" Value="30"/>
+            </StatusBarItem>
+        </StatusBar>
         <TabControl>
             <TabItem Header="Tab1">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="63"/>
-                        <RowDefinition Height="325"/>
+                        <RowDefinition Height="63*"/>
+                        <RowDefinition Height="325*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="157"/>
-                        <ColumnDefinition Width="637"/>
+                        <ColumnDefinition Width="157*"/>
+                        <ColumnDefinition Width="637*"/>
                     </Grid.ColumnDefinitions>
                     <Rectangle Grid.Column="0" Grid.Row="0"
                          Margin="5,7"
