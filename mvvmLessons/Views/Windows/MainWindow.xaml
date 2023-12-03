@@ -11,7 +11,7 @@
     </Window.DataContext>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="File">
+            <MenuItem Header="File"> 
                 <MenuItem Header="Exit"></MenuItem>
             </MenuItem>
             <MenuItem Header="Help">
@@ -20,7 +20,7 @@
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem MinWidth="150" MaxWidth="350"> 
-                <TextBlock Text="234"/>
+                <TextBlock Text="{Binding Status}"/>
             </StatusBarItem>
             <StatusBarItem>
                 <ProgressBar Width="120" Height="14" Value="30"/>
@@ -48,7 +48,7 @@
                              Fill ="Bisque"
                              Stroke="Green"
                              StrokeThickness="3"/>
-                    <GridSplitter Grid.Column="0" Grid.RowSpan="2"
+                    <GridSplitter Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
                                   HorizontalAlignment="Right"
                                   Width="4"/>
                 </Grid>
