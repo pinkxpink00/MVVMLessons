@@ -1,9 +1,12 @@
-﻿using mvvmLessons.ViewModels.Base;
+﻿using mvvmLessons.Infrastructure.Commands.Base;
+using mvvmLessons.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 
 namespace mvvmLessons.ViewModels
 {
@@ -43,5 +46,30 @@ namespace mvvmLessons.ViewModels
         }
 
         #endregion
+
+        #region Команды
+
+        #region CloseCommand
+
+        public ICommand CloseAppCommand { get; }
+
+        private void OnCloseAppCommandExecuted(object p)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private bool CanCloseAppCommandExecuted(object p) => true;
+
+        #endregion
+
+        #endregion
+        public MainWindowViewModel()
+        {
+            #region CommandsObject
+
+            CloseAppCommand = new LambdaCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecuted);
+
+            #endregion
+        }
     }
 }
