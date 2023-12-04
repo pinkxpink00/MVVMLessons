@@ -70,6 +70,7 @@ namespace mvvmLessons.ViewModels
             CloseAppCommand = new LambdaCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecuted);
 
             #endregion
+
         }
     }
 }

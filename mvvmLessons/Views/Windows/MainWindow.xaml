@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:l="clr-namespace:mvvmLessons"
         xmlns:vm="clr-namespace:mvvmLessons.ViewModels"
         Title="{Binding Path=Title}" Height="450" Width="800">
@@ -27,7 +28,17 @@
             </StatusBarItem>
         </StatusBar>
         <TabControl>
-            <TabItem Header="Tab1">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Image Source=""></Image>-->
+                        <fa:ImageAwesome Icon="Regular_File"
+                                         Height="13"
+                                         Margin="0 0 5 0"
+                                         Foreground="DeepPink"/>
+                        <TextBlock Text="Tab1"/>
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="63*"/>
@@ -47,13 +58,27 @@
                     <Ellipse Grid.Column="1" Grid.Row="0"
                              Fill ="Bisque"
                              Stroke="Green"
-                             StrokeThickness="3"/>
+                             StrokeThickness="3">
+                        <Ellipse.InputBindings>
+                            <MouseBinding Command="{Binding CloseAppCommand}"
+                                          MouseAction="LeftDoubleClick"/>
+                        </Ellipse.InputBindings>
+                    </Ellipse>
                     <GridSplitter Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
                                   HorizontalAlignment="Right"
                                   Width="4"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Tab2">
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Regular_File"
+                                         Height="13"
+                                         Margin="0 0 5 0"
+                                         Foreground="DeepPink"/>
+                        <TextBlock Text="Tab2"/>
+                    </StackPanel>
+                </TabItem.Header>
                 <Grid>
                 </Grid>
             </TabItem>
