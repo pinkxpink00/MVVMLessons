@@ -13,18 +13,12 @@ namespace mvvmLessons.Infrastructure.Commands.Base
 
         public LambdaCommand(Action<object> Execute, Func<object,bool> CanExecute =null)
         {
-            execute = Execute;
+            execute = Execute ?? throw new ArgumentNullException(nameof(Execute));
             canExecute = CanExecute;
         }
 
-        public override bool CanExecute(object? parameter)
-        {
-            throw new NotImplementedException();
-        }
+        public override bool CanExecute(object? parameter) => canExecute?.Invoke(parameter) ?? true;
 
-        public override void Execute(object? parameter)
-        {
-            throw new NotImplementedException();
-        }
+        public override void Execute(object? parameter) => execute(parameter);
     }
 }
