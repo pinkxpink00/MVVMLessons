@@ -5,7 +5,7 @@ namespace MVVMLessonsConsole
 {
     class Program
     {
-        private const string data_url = @"https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/01-01-2021.csv";
+        private const string data_url = @"https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
 
         private static async Task<Stream> GetDataStream()
         {
@@ -17,7 +17,7 @@ namespace MVVMLessonsConsole
         private static  IEnumerable<string> GetDataLines()
         {
              using var data_stream =  GetDataStream().Result;
-            using var data_reader = new StreamReader(data_stream);
+             using var data_reader = new StreamReader(data_stream);
 
             while (!data_reader.EndOfStream)
             {
@@ -31,20 +31,22 @@ namespace MVVMLessonsConsole
             .First()
             .Split(',')
             .Skip(4)
-            .Select(s =>
-            {
-                if (DateTime.TryParse(s, out var result))
-                {
-                    return result;
-                }
-                else
-                {
-                    // Обработка случая, когда строку не удалось распознать как дату.
-                    // Можете вернуть дату-метку по умолчанию или null, в зависимости от вашей логики.
-                    return DateTime.MinValue; // Пример: возвращение минимальной даты.
-                }
-            })
+            .Select(s => DateTime.Parse(s, CultureInfo.InvariantCulture))
             .ToArray();
+
+        //private static IEnumerable<(string Country, string Province, int[] Counts)> GetData()
+        //{
+        //    var lines = GetDataLines()
+        //        .Skip(1)
+        //        .Select(line => line.Split(','));
+
+        //    foreach (var row in lines)
+        //    {
+        //        var province = row[0].Trim();
+        //        var country_name = row[1].Trim(' ','"');
+        //        var counts = row.Skip(4).Select(int.Parse).ToArray();
+        //    }
+        //}
 
         static void Main(string[] args)
         {
