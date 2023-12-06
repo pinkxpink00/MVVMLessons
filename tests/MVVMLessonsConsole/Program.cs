@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.IO;
+using System.Globalization;
 
 namespace MVVMLessonsConsole
 {
@@ -27,13 +27,39 @@ namespace MVVMLessonsConsole
             }
         }
 
+        private static DateTime[] GetDates() => GetDataLines()
+            .First()
+            .Split(',')
+            .Skip(4)
+            .Select(s =>
+            {
+                if (DateTime.TryParse(s, out var result))
+                {
+                    return result;
+                }
+                else
+                {
+                    // Обработка случая, когда строку не удалось распознать как дату.
+                    // Можете вернуть дату-метку по умолчанию или null, в зависимости от вашей логики.
+                    return DateTime.MinValue; // Пример: возвращение минимальной даты.
+                }
+            })
+            .ToArray();
+
         static void Main(string[] args)
         {
-            var client = new HttpClient();
+            //var client = new HttpClient();
 
-            var response = client.GetAsync(data_url).Result;
+            //var response = client.GetAsync(data_url).Result;
 
-            var csv_str = response.Content.ReadAsStringAsync().Result;
+            //var csv_str = response.Content.ReadAsStringAsync().Result;
+
+            //foreach(var data_line in GetDataLines())
+            //    Console.WriteLine(data_line);
+
+            var dates = GetDates();
+
+            Console.WriteLine(string.Join("\r\n",dates));
 
             Console.ReadLine();
         }
