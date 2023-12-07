@@ -8,7 +8,7 @@ namespace mvvmLessons.ViewModels
     internal class MainWindowViewModel : ViewModel
     {
         #region Заголовок окна
-        private string _Title = "Анализ статистики CV19";
+        private string _Title = "Крипторынок";
 
         /// <summary>
         /// Заголовок окна

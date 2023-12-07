@@ -1,116 +1,154 @@
 ﻿using System.IO;
 using System.Globalization;
+using System.Net.Http.Json;
 
 namespace MVVMLessonsConsole
 {
+   
+    
     class Program
     {
-
-         static async Task Main()
-    {
-        string url = "https://api.coingecko.com/api/v3/ping";
-
-        using (HttpClient client = new HttpClient())
+        private const string date_url = @"https://api.coingecko.com/api/v3/coins/list?include_platform=true";
+        static void Main()
         {
-            try
-            {
-                HttpResponseMessage response = await client.GetAsync(url);
+            var client = new HttpClient();
+            var response = client.GetAsync(date_url).Result;
 
-                if (response.IsSuccessStatusCode)
-                {
-                    string responseBody = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine("Запрос успешен!");
-                    Console.WriteLine(responseBody);
-                }
-                else
-                {
-                    Console.WriteLine($"Ошибка запроса. Код состояния: {response.StatusCode}");
-                    Console.WriteLine(await response.Content.ReadAsStringAsync());
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Возникла ошибка: {ex.Message}");
-            }
+            var str_read = response.Content.ReadAsStringAsync().Result;
+
+            Console.WriteLine(str_read);
         }
     }
 
-        //private const string data_url = @"https://microsoft.com/";
+    //public class Coin
+    //{
+    //    public string Name { get; set; }
+    //    public decimal CurrentPrice { get; set; }
+    //}
 
-        ////private static async Task<Stream> GetDataStream()
-        ////{
-        ////    var client = new HttpClient();
-        ////    var response = await client.GetAsync(data_url,HttpCompletionOption.ResponseHeadersRead);
-        ////    return await response.Content.ReadAsStreamAsync();
-        ////}
+    //class Program
+    //{
 
-        //static  void Main(string[] args)
-        //{
-        //    using var client = new HttpClient();
-        //    var result =  client.GetStringAsync(data_url);
+    //    static async Task Main()
+    //    {
+    //        // URL API CoinGecko для получения информации о криптовалютах
+    //        string apiUrl = "https://api.coingecko.com/api/v3/coins/markets";
 
-        //    var content = response.Content.ReadAsStringAsync();
-        //}
+    //        // Параметры запроса, например, идентификаторы криптовалют и валюта
+    //        string ids = "bitcoin,ethereum,litecoin";
+    //        string vsCurrency = "usd";
 
-        //private static  IEnumerable<string> GetDataLines()
-        //{
-        //     using var data_stream =  GetDataStream().Result;
-        //     using var data_reader = new StreamReader(data_stream);
+    //        // Формирование URL с параметрами
+    //        string fullUrl = $"{apiUrl}?ids={ids}&vs_currency={vsCurrency}";
 
-        //    while (!data_reader.EndOfStream)
-        //    {
-        //        var line =  data_reader.ReadLine();
-        //        if (string.IsNullOrEmpty(line)) continue;
-        //        yield return line.Replace("Korea,","Korea -"); 
-        //    }
-        //}
+    //        // Получение данных с использованием HttpClient и десериализация JSON
+    //        List<Coin> coins = await GetCoinsFromApi(fullUrl);
 
-        //private static DateTime[] GetDates() => GetDataLines()
-        //    .First()
-        //    .Split(',')
-        //    .Skip(4)
-        //    .Select(s => DateTime.Parse(s, CultureInfo.InvariantCulture))
-        //    .ToArray();
+    //        // LINQ-запрос для выбора названия и текущей цены каждой криптовалюты
+    //        var query = from coin in coins
+    //                    select new { coin.Name, coin.CurrentPrice };
 
-        //private static IEnumerable<(string Country, string Province, int[] Counts)> GetData()
-        //{
-        //    var lines = GetDataLines()
-        //        .Skip(1)
-        //        .Select(line => line.Split(','));
+    //        // Вывод результатов
+    //        foreach (var result in query)
+    //        {
+    //            Console.WriteLine($"Название: {result.Name}, Цена: {result.CurrentPrice}");
+    //        }
+    //    }
 
-        //    foreach (var row in lines)
-        //    {
-        //        var province = row[0].Trim();
-        //        var country_name = row[1].Trim(' ', '"');
-        //        var counts = row.Skip(4).Select(int.Parse).ToArray();
+    //    static async Task<List<Coin>> GetCoinsFromApi(string apiUrl)
+    //    {
+    //        using (HttpClient client = new HttpClient())
+    //        {
+    //            try
+    //            {
+    //                // Отправка GET-запроса и десериализация JSON
+    //                List<Coin> coins = await client.GetFromJsonAsync<List<Coin>>(apiUrl);
+    //                return coins;
+    //            }
+    //            catch (Exception ex)
+    //            {
+    //                Console.WriteLine($"Ошибка при получении данных с API: {ex.Message}");
+    //                return null;
+    //            }
+    //        }
+    //    }
 
-        //        yield return (province, country_name, counts);
-        //    }
-        //}
+    //private const string data_url = @"https://microsoft.com/";
 
-        //static void Main(string[] args)
-        //{
-        //    //var client = new HttpClient();
+    ////private static async Task<Stream> GetDataStream()
+    ////{
+    ////    var client = new HttpClient();
+    ////    var response = await client.GetAsync(data_url,HttpCompletionOption.ResponseHeadersRead);
+    ////    return await response.Content.ReadAsStreamAsync();
+    ////}
 
-        //    //var response = client.GetAsync(data_url).Result;
+    //static  void Main(string[] args)
+    //{
+    //    using var client = new HttpClient();
+    //    var result =  client.GetStringAsync(data_url);
 
-        //    //var csv_str = response.Content.ReadAsStringAsync().Result;
+    //    var content = response.Content.ReadAsStringAsync();
+    //}
 
-        //    //foreach(var data_line in GetDataLines())
-        //    //    Console.WriteLine(data_line);
+    //private static  IEnumerable<string> GetDataLines()
+    //{
+    //     using var data_stream =  GetDataStream().Result;
+    //     using var data_reader = new StreamReader(data_stream);
 
-        //    //var dates = GetDates();
+    //    while (!data_reader.EndOfStream)
+    //    {
+    //        var line =  data_reader.ReadLine();
+    //        if (string.IsNullOrEmpty(line)) continue;
+    //        yield return line.Replace("Korea,","Korea -"); 
+    //    }
+    //}
 
-        //    //Console.WriteLine(string.Join("\r\n",dates));
+    //private static DateTime[] GetDates() => GetDataLines()
+    //    .First()
+    //    .Split(',')
+    //    .Skip(4)
+    //    .Select(s => DateTime.Parse(s, CultureInfo.InvariantCulture))
+    //    .ToArray();
+
+    //private static IEnumerable<(string Country, string Province, int[] Counts)> GetData()
+    //{
+    //    var lines = GetDataLines()
+    //        .Skip(1)
+    //        .Select(line => line.Split(','));
+
+    //    foreach (var row in lines)
+    //    {
+    //        var province = row[0].Trim();
+    //        var country_name = row[1].Trim(' ', '"');
+    //        var counts = row.Skip(4).Select(int.Parse).ToArray();
+
+    //        yield return (province, country_name, counts);
+    //    }
+    //}
+
+    //static void Main(string[] args)
+    //{
+    //    //var client = new HttpClient();
+
+    //    //var response = client.GetAsync(data_url).Result;
+
+    //    //var csv_str = response.Content.ReadAsStringAsync().Result;
+
+    //    //foreach(var data_line in GetDataLines())
+    //    //    Console.WriteLine(data_line);
+
+    //    //var dates = GetDates();
+
+    //    //Console.WriteLine(string.Join("\r\n",dates));
 
 
-        //    var ukraine_data = GetData()
-        //        .First(v => v.Country.Equals("Ukraine"));
+    //    var ukraine_data = GetData()
+    //        .First(v => v.Country.Equals("Ukraine"));
 
-        //    Console.WriteLine(string.Join("\r\n",GetDates().Zip(ukraine_data.Counts,(date,count)=>$"{date}-{count}")));
+    //    Console.WriteLine(string.Join("\r\n",GetDates().Zip(ukraine_data.Counts,(date,count)=>$"{date}-{count}")));
 
-        //    Console.ReadLine();
-        //}
+    //    Console.ReadLine();
+    //}
 
-    }
+
 }
