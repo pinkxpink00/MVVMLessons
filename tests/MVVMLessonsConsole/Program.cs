@@ -1,22 +1,51 @@
-﻿using System.IO;
-using System.Globalization;
-using System.Net.Http.Json;
+﻿using System.Globalization;
 
 namespace MVVMLessonsConsole
 {
-   
-    
+
+
     class Program
     {
-        private const string date_url = @"https://api.coingecko.com/api/v3/coins/list?include_platform=true";
-        static void Main()
+        private const string data_url = @"https://api.coingecko.com/api/v3/search/trending";
+
+        #region StreamCreator
+        private static async Task<Stream> GetDateStream()
         {
             var client = new HttpClient();
-            var response = client.GetAsync(date_url).Result;
+            var response = await client.GetAsync(data_url, HttpCompletionOption.ResponseHeadersRead);
+            return await response.Content.ReadAsStreamAsync();
+        }
+        #endregion
 
-            var str_read = response.Content.ReadAsStringAsync().Result;
+        #region StringSubsequence
+        private static IEnumerable<string> GetDateLines()
+        {
+            using var data_stream = GetDateStream().Result;
+            using var data_reader = new StreamReader(data_stream);
 
-            Console.WriteLine(str_read);
+            while (!data_reader.EndOfStream)
+            {
+                var line = data_reader.ReadLine();
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                yield return line;
+            }
+        }
+        #endregion
+
+        #region StringFilter
+        private static String[] GetDateStrings() => GetDateLines()
+            .ElementAtOrDefault(1)
+            .Split(',')
+            .SkipLast(2)
+            .Select(s => s.ToString())
+            .ToArray();
+
+        #endregion
+
+        static void Main()
+        {
+            var dates = GetDateStrings();
+            Console.WriteLine(string.Join("\r\n",dates));
         }
     }
 
