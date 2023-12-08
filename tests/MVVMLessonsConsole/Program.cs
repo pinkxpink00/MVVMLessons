@@ -1,53 +1,74 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Linq;
+using MVVMLessonsConsole;
 
-namespace MVVMLessonsConsole
+class Program
 {
+    private const string data_url = @"https://api.coingecko.com/api/v3/search/trending";
 
-
-    class Program
+    #region StreamCreator
+    private static async Task<Stream> GetDateStream()
     {
-        private const string data_url = @"https://api.coingecko.com/api/v3/search/trending";
+        var client = new HttpClient();
+        var response = await client.GetAsync(data_url, HttpCompletionOption.ResponseHeadersRead);
+        return await response.Content.ReadAsStreamAsync();
+    }
+    #endregion
 
-        #region StreamCreator
-        private static async Task<Stream> GetDateStream()
+    #region StringSubsequence
+    private static IEnumerable<string> GetDateLines()
+    {
+        using var data_stream = GetDateStream().Result;
+        using var data_reader = new StreamReader(data_stream);
+
+        while (!data_reader.EndOfStream)
         {
-            var client = new HttpClient();
-            var response = await client.GetAsync(data_url, HttpCompletionOption.ResponseHeadersRead);
-            return await response.Content.ReadAsStreamAsync();
-        }
-        #endregion
-
-        #region StringSubsequence
-        private static IEnumerable<string> GetDateLines()
-        {
-            using var data_stream = GetDateStream().Result;
-            using var data_reader = new StreamReader(data_stream);
-
-            while (!data_reader.EndOfStream)
-            {
-                var line = data_reader.ReadLine();
-                if (string.IsNullOrWhiteSpace(line)) continue;
-                yield return line;
-            }
-        }
-        #endregion
-
-        #region StringFilter
-        private static String[] GetDateStrings() => GetDateLines()
-            .ElementAtOrDefault(1)
-            .Split(',')
-            .SkipLast(2)
-            .Select(s => s.ToString())
-            .ToArray();
-
-        #endregion
-
-        static void Main()
-        {
-            var dates = GetDateStrings();
-            Console.WriteLine(string.Join("\r\n",dates));
+            var line = data_reader.ReadLine();
+            if (string.IsNullOrWhiteSpace(line)) continue;
+            yield return line;
         }
     }
+    #endregion
+
+    #region StringFilter
+    private static IEnumerable<CoinData> GetCoinData()
+    {
+        var coinInfo = GetDateLines()
+            .ElementAtOrDefault(1)
+            .Split(',')
+            .Select(part => part.Trim())
+            .Where(part => part.StartsWith("\"coin_id\":") || part.StartsWith("\"name\":"))
+            .ToArray();
+
+        var coinDataList = new List<CoinData>();
+
+        for (int i = 0; i < coinInfo.Length; i += 2)
+        {
+            var coinId = int.Parse(coinInfo[i].Split(':')[1]);
+            var coinName = coinInfo[i + 1].Split(':')[1].Trim('"');
+            coinDataList.Add(new CoinData { CoinId = coinId, CoinName = coinName });
+        }
+
+        return coinDataList;
+    }
+    #endregion
+
+    static void Main()
+    {
+         var coinDataList = GetCoinData();
+
+        Console.WriteLine("Coin Information:");
+        foreach (var coinData in coinDataList)
+        {
+            Console.WriteLine($"Coin ID: {coinData.CoinId}, Coin Name: {coinData.CoinName}");
+        }
+    }
+}
+
 
     //public class Coin
     //{
@@ -180,4 +201,3 @@ namespace MVVMLessonsConsole
     //}
 
 
-}
