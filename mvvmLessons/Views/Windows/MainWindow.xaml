@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:l="clr-namespace:mvvmLessons"
+        xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:vm="clr-namespace:mvvmLessons.ViewModels"
         Title="{Binding Path=Title}" Height="450" Width="800">
     <Window.DataContext>
@@ -12,7 +13,7 @@
     </Window.DataContext>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
-            <MenuItem Header="File"> 
+            <MenuItem Header="File">
                 <MenuItem Header="Exit" Command="{Binding CloseAppCommand}"></MenuItem>
             </MenuItem>
             <MenuItem Header="Help">
@@ -20,7 +21,7 @@
             </MenuItem>
         </Menu>
         <StatusBar DockPanel.Dock="Bottom">
-            <StatusBarItem MinWidth="150" MaxWidth="350"> 
+            <StatusBarItem MinWidth="150" MaxWidth="350">
                 <TextBlock Text="{Binding Status}"/>
             </StatusBarItem>
             <StatusBarItem>
@@ -69,17 +70,9 @@
                                   Width="4"/>
                 </Grid>
             </TabItem>
-            <TabItem>
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <fa:ImageAwesome Icon="Regular_File"
-                                         Height="13"
-                                         Margin="0 0 5 0"
-                                         Foreground="DeepPink"/>
-                        <TextBlock Text="Tab2"/>
-                    </StackPanel>
-                </TabItem.Header>
+            <TabItem Header ="График">
                 <Grid>
+                    <oxy:PlotView Model="{Binding PlotModel}" />
                 </Grid>
             </TabItem>
         </TabControl>

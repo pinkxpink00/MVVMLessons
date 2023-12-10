@@ -1,31 +1,34 @@
-﻿using mvvmLessons.Infrastructure.Commands.Base;
-using mvvmLessons.ViewModels.Base;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
-using mvvmLessons.Models;
-
+using mvvmLessons.Infrastructure.Commands.Base;
+using mvvmLessons.ViewModels.Base;
+using OxyPlot;
+using OxyPlot.Series;
 
 namespace mvvmLessons.ViewModels
 {
     internal class MainWindowViewModel : ViewModel
     {
-        #region Тестовый набор данных для визуализации графиков
-        private IEnumerable<DataPoint> _TestDataPoints;
+        private PlotModel _plotModel;
+
+        public PlotModel PlotModel
+        {
+            get => _plotModel;
+            set => Set(ref _plotModel, value);
+        }
+
+        private IEnumerable<DataPoint> _testDataPoints;
 
         public IEnumerable<DataPoint> TestDataPoints
         {
-            get => _TestDataPoints;
+            get => _testDataPoints;
+            set => Set(ref _testDataPoints, value);
+        }
 
-            set => Set(ref _TestDataPoints, value);
-        } 
-        #endregion
-
-        #region Заголовок окна
         private string _Title = "Крипторынок";
 
-        /// <summary>
-        /// Заголовок окна
-        /// </summary>
         public string Title
         {
             get => _Title;
@@ -36,28 +39,14 @@ namespace mvvmLessons.ViewModels
                 OnPropertyChanged();
             }
         }
-        #endregion
-
-        #region Статус программы
-        /// <summary>
-        /// Статус программы
-        /// </summary>
 
         private string _Status = "Ready!";
-        /// <summary>
-        /// Статус программы
-        /// </summary>
+
         public string Status
         {
             get => _Status;
             set => Set(ref _Status, value);
         }
-
-        #endregion
-
-        #region Команды
-
-        #region CloseCommand
 
         public ICommand CloseAppCommand { get; }
 
@@ -68,28 +57,35 @@ namespace mvvmLessons.ViewModels
 
         private bool CanCloseAppCommandExecuted(object p) => true;
 
-        #endregion
-
-        #endregion
         public MainWindowViewModel()
         {
-            #region CommandsObject
-
             CloseAppCommand = new LambdaCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecuted);
 
-            #endregion
+            var dataPoints = new List<DataPoint>();
 
-            var data_points = new List<DataPoint>((int)(360/0.1));
             for (var x = 0d; x <= 360; x += 0.1)
             {
-                const double to_rad = Math.PI / 180;
-                var y = Math.Sin(x * to_rad);
+                const double toRad = Math.PI / 180;
+                var y = Math.Sin(x * toRad);
 
-                data_points.Add(new DataPoint { XValue = x, YValue = y });
+                dataPoints.Add(new DataPoint(x, y));
             }
 
-            TestDataPoints = data_points;
+            TestDataPoints = dataPoints;
 
+            PlotModel = new PlotModel();
+
+            var lineSeries = new LineSeries
+            {
+                Title = "Sin(x)"
+            };
+
+            foreach (var dataPoint in TestDataPoints)
+            {
+                lineSeries.Points.Add(dataPoint);
+            }
+
+            PlotModel.Series.Add(lineSeries);
         }
     }
 }
