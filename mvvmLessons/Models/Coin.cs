@@ -11,14 +11,6 @@ namespace mvvmLessons.Models
         public string CoinName { get; set; }
 
         public int CoinPrice { get; set; }
-
-
-    }
-
-    internal struct DataPoint
-    {
-        public double XValue { get; set; }
-
-        public double YValue { get; set; }
+        
     }
 }
